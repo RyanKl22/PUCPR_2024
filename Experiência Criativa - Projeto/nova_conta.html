@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JourneyBuddy</title>
+    <link rel="stylesheet" href="nova_conta.css">
+</head>
+<body>
+    
+    <nav>
+        <div class="container main-nav flex">
+            <a href="#" class="company-logo">
+                <img class="logo" src="./Images/Logo - Copia.png" alt="company logo">
+            </a>
+            <div class="nav-links" id="nav-links">
+                <ul class="flex">
+                    <li><a href="index.html" class="hover-link primary-button">Entrar</a></li>
+                </ul>
+            </div>
+            <a href="#" class="nav-toggle hover-link" id="nav-toggle">
+                <i class="fa-solid fa-bars"></i>
+            </a>
+        </div>
+    </nav>
+
+    <header>
+
+        <div class="container header-section flex">
+            <div class="login-container">
+                <!-- Início do formulário de registro -->
+                <form id="registration-form" action="register.php" method="post" onsubmit="return validarSenha()">
+                    <h2>Criar uma Conta</h2>
+                    <div class="form-group">
+                        <label for="accountType">Tipo de Conta:</label>
+                        <select id="accountType" name="accountType" class="custom-dropdown" required onchange="toggleAccountFields()">
+                            <option value="">Selecione</option>
+                            <option value="Pessoa Fisica">Pessoa Física</option>
+                            <option value="Pessoa Juridica">Pessoa Jurídica</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group"><label for="email">Email:</label><input type="email" id="email" name="email"></div>
+
+                    <!-- Campos para Pessoa Física -->
+                    <div id="pessoaFisicaFields" style="display:none">
+                        <div class="form-group"><label for="firstName">Primeiro Nome:</label><input type="text" id="firstName" name="firstName"></div>
+                        <div class="form-group"><label for="lastName">Segundo Nome:</label><input type="text" id="lastName" name="lastName"></div>
+                        <div class="form-group"><label for="dob">Data de Nascimento:</label><input type="date" id="dataNascimento" name="dataNascimento" onblur="validarIdade()"></div>
+                        <div class="form-group"><label for="cpf">CPF:</label><input type="text" id="cpf" name="cpf" onblur="validarCPF()"></div>
+                        <div class="form-group">
+                            <label for="gender">Gênero:</label>
+                            <select id="gender" name="gender" class="custom-dropdown">
+                                <option value="">Selecione</option>
+                                <option value="Masculino">Masculino</option>
+                                <option value="Feminino">Feminino</option>
+                                <option value="Outro">Outro</option>
+                            </select>
+                        </div>
+                        <div class="form-group"><label for="mobilePhone">Telefone Celular:</label><input type="tel" id="mobilePhone" name="mobilePhone"></div>
+                        <div class="mensagemErro" id="mensagemErroIdade" style="color: red;"></div>
+                    </div>
+                    
+                    <!-- Campos para Pessoa Jurídica -->
+                    <div id="pessoaJuridicaFields" style="display:none">
+                        <div class="form-group"><label for="tradeName">Nome Fantasia:</label><input type="text" id="tradeName" name="tradeName"></div>
+                        <div class="form-group"><label for="corporateName">Razão Social:</label><input type="text" id="corporateName" name="corporateName"></div>
+                        <div class="form-group"><label for="cnpj">CNPJ:</label><input type="text" id="cnpj" name="cnpj"></div>
+                        <div class="form-group"><label for="openDate">Data da Abertura da Empresa:</label><input type="date" id="openDate" name="openDate"></div>
+                        <div class="form-group"><label for="stateRegistration">Inscrição Estadual:</label><input type="text" id="stateRegistration" name="stateRegistration"></div>
+                        <div class="form-group"><label for="contactPhone">Telefone para contato:</label><input type="tel" id="contactPhone" name="contactPhone"></div>
+                    </div>
+    
+                    <!-- Campos comuns a ambos -->
+                    <div id="passwordFields" style="display:none">
+                        <div class="form-group"><label for="password">Criar Senha:</label><input type="password" id="password" name="password" required></div>
+                        <div class="form-group"><label for="confirmPassword">Confirmar Senha:</label><input type="password" id="confirmPassword" name="confirmPassword" required></div>
+                        <div class="form-group"> 
+                            <button type="submit" class="primary-button">Registrar</button>
+                        </div>
+                        <div class="mensagemErro" id="confirmPasswordError" style="color: red;"></div>
+                    </div>
+
+                </form>
+                <!-- Fim do formulário de registro -->
+            </div>
+        </div>
+
+    </header>
+
+    <br>
+    
+    <footer>
+        <div class="subfooter">
+            <div class="container flex subfooter-container">
+                <a class="hover-link2" href="#">© 2024 JourneyBuddy. Todos os direitos reservados</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://kit.fontawesome.com/c1fc3d2826.js" crossorigin="anonymous"></script>
+
+    <script>
+        const toggleButton = document.getElementById('nav-toggle');
+        const navLinks = document.getElementById('nav-links');
+
+        toggleButton.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        })
+
+    </script>
+
+    <script>
+
+        function toggleAccountFields() {
+            const accountType = document.getElementById('accountType').value;
+            const pessoaFisicaFields = document.getElementById('pessoaFisicaFields');
+            const pessoaJuridicaFields = document.getElementById('pessoaJuridicaFields');
+            const passwordFields = document.getElementById('passwordFields');
+            
+            const isAccountTypeSelected = accountType !== "";
+            
+            pessoaFisicaFields.style.display = isAccountTypeSelected && accountType === 'Pessoa Fisica' ? 'block' : 'none';
+            pessoaJuridicaFields.style.display = isAccountTypeSelected && accountType === 'Pessoa Juridica' ? 'block' : 'none';
+            passwordFields.style.display = isAccountTypeSelected ? 'block' : 'none';
+        }
+
+        function validarIdade() {
+            const dataNascimento = document.getElementById('dataNascimento').value;
+            if (dataNascimento) {
+                const dataNascimentoFormatada = new Date(dataNascimento);
+                const hoje = new Date();
+                const diferencaAnos = hoje.getFullYear() - dataNascimentoFormatada.getFullYear();
+                const diferencaMeses = hoje.getMonth() - dataNascimentoFormatada.getMonth();
+                const diferencaDias = hoje.getDate() - dataNascimentoFormatada.getDate();
+
+                if (diferencaAnos < 18 || (diferencaAnos === 18 && diferencaMeses < 0) || (diferencaAnos === 18 && diferencaMeses === 0 && diferencaDias < 0)) {
+                    document.getElementById('mensagemErroIdade').innerText = "Você deve ter mais de 18 anos.";
+                    document.getElementById('dataNascimento').value = "";
+                } else {
+                    document.getElementById('mensagemErroIdade').innerText = "";
+                }
+            }
+        }
+
+        function validarCPF() {
+            let cpf = document.getElementById('cpf').value;
+            cpf = cpf.replace(/[^\d]/g, ''); // Remove formatação do CPF
+            const regex = /[0-9]{3}[0-9]{3}[0-9]{3}[0-9]{2}/;
+
+            if (!regex.test(cpf)) {
+                alert('CPF inválido');
+                document.getElementById('cpf').value = "";
+            } else {
+                // Formatar o CPF no formato padrão XXX.XXX.XXX-XX
+                cpf = cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+                document.getElementById('cpf').value = cpf;
+            }
+        }
+
+        function validarSenha() {
+            const senha = document.getElementById('password').value;
+            const confirmarSenha = document.getElementById('confirmPassword').value;
+
+            if (senha !== confirmarSenha) {
+                document.getElementById('confirmPasswordError').innerText = "As senhas não correspondem.";
+                return false;
+            } else {
+                document.getElementById('confirmPasswordError').innerText = "";
+                return true;
+            }
+        }
+
+        function validarEmail() {
+            const email = document.getElementById('email').value;
+            const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            
+            if (!regex.test(email)) {
+                alert('Email inválido');
+                document.getElementById('email').value = "";
+            }
+        }
+    </script>
+
+</body>
+</html>
