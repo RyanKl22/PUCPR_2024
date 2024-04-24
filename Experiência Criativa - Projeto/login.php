@@ -23,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['email']) && isset($_PO
             $_SESSION['usuario_email'] = $usuario['Email'];
             
             // Redireciona para a página desejada após o login
-            header("Location: pagina_principal.php");
+            header("Location: main.html");
             exit();
         } else {
             // Senha incorreta
