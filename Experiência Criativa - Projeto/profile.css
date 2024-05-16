@@ -567,14 +567,17 @@ body{
     }
 
     .content{
-        width: calc(100% - 60px);
+        width: calc(100% - 200px);
         left: 200px;
     }
 
+    .sidebar.close~.content{
+        width: calc(100% - 60px);
+        left: 60px;
+    }
 }
 
 @media screen and (max-width: 576px) {
-    
     .content nav form .form-input input{
         display: none;
     }
@@ -619,10 +622,69 @@ body{
     .content main .bottom-data .reminders .task-list{
         min-width: 340px;
     }
-
 }
 
 .imagem{
     position: relative;
     width: 30%;
 }
+
+.content nav .profile {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Espaçamento entre a imagem e as informações do usuário */
+}
+
+.content nav .profile img {
+    width: 36px;
+    height: 36px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.content nav .profile .user-info {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2; /* Ajusta o espaçamento entre o nome e a função */
+}
+
+.content nav .profile .user-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--dark);
+}
+
+.content nav .profile .user-role {
+    font-size: 12px;
+    color: var(--dark-grey);
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Espaçamento entre a imagem e as informações do usuário */
+}
+
+.profile img {
+    width: 36px;
+    height: 36px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.user-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--dark);
+}
+
+.user-role {
+    font-size: 12px;
+    color: var(--dark-grey);
+}
+

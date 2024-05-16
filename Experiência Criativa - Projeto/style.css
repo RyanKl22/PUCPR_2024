@@ -218,7 +218,63 @@ header {
     cursor: pointer; /* Indica que o elemento é clicável */
 }
 
-/* Melhora a responsividade */
+/* Responsividade */
+@media (max-width: 768px) {
+    .main-nav .company-logo img {
+        width: 150px;
+    }
+
+    .nav-links ul {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .nav-toggle {
+        display: block;
+    }
+
+    .nav-links {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        text-align: center;
+    }
+
+    .nav-links.active {
+        display: flex;
+    }
+
+    .header-section {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .header-left, .header-right {
+        max-width: 100%;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .header-section {
+        padding: 20px var(--padding-inline-section);
+    }
+
+    .header-left, .header-right {
+        flex: 1;
+    }
+
+    .form-group input {
+        width: 100%;
+    }
+
+    .login-container {
+        width: 90%;
+        padding: 10px;
+    }
+}
+
 @media (max-width: 380px) {
     .login-container {
         margin: 10px; /* Reduz a margem em telas menores */

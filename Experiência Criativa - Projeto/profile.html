@@ -18,7 +18,7 @@
         </a>
         <ul class="side-menu">
             <li><a href="main.html"><i class='bx bxs-home-smile'></i></i>Home</a></li>
-            <li><a href=""><i class='bx bx-help-circle'></i></i></i>Ajuda</a></li>
+            <li><a href=""><i class='bx bx-help-circle'></i>Ajuda</a></li>
         </ul>
         <ul class="side-menu">
             <li>
@@ -42,36 +42,59 @@
                 </div>
             </form>
             <input type="checkbox" id="theme-toggle" hidden>
-            <a href="#" class="notif">
-                <i class='bx bx-bell'></i>
-                <span class="count">1</span>
-            </a>
-            <a href="main.html"class="profile">
+            <a href="main.html" class="profile">
                 <img src="images/Logo.png">
             </a>
+            <div class="user-info">
+                <span class="user-name">Ryan Kloss</span>
+                <span class="user-role">Viajante</span>
+            </div>
         </nav>
-
         <!-- Fim da Barra de Navegação -->
 
         <main>
             <div class="header">
                 <div class="left">
-                    <h1>Vizualizar Perfil</h1>
+                    <h1>Visualizar Perfil</h1>
                     <ul class="breadcrumb">
                        
+                    </ul>
                 </div>
-                
             </div>
 
             <div class="bottom-data">
-                
+                <!-- Foto de perfil -->
+                <div class="profile-pic">
+                    <img src="images/user_profile.jpg" alt="Foto de Perfil">
+                    <div class="change-pic">
+                        <label for="file-upload" class="custom-file-upload">
+                            <i class='bx bx-cloud-upload'></i> Alterar Foto
+                        </label>
+                        <input id="file-upload" type="file"/>
+                    </div>
+                </div>
+
+                <!-- Informações do usuário -->
+                <div class="user-info">
+                    <!-- Campos para pessoa física -->
+                    <div class="pf-info">
+                        <input type="text" name="nome" placeholder="Nome" value="João da Silva">
+                        <input type="email" name="email" placeholder="Email" value="joao@example.com">
+                        <input type="text" name="data_nascimento" placeholder="Data de Nascimento" value="01/01/1990">
+                        <input type="text" name="cpf" placeholder="CPF" value="123.456.789-00">
+                        <input type="tel" name="telefone" placeholder="Telefone" value="(11) 98765-4321">
+                        <select name="genero">
+                            <option value="masculino" selected>Masculino</option>
+                            <option value="feminino">Feminino</option>
+                            <option value="outro">Outro</option>
+                        </select>
+                    </div>
+
+                </div>
             </div>
-
         </main>
-
     </div>
 
-    
 </body>
 
 </html>

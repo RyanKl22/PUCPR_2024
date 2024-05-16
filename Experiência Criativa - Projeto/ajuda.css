@@ -626,3 +626,120 @@ body{
     position: relative;
     width: 30%;
 }
+
+.content main .bottom-data {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Alinha o formulário ao centro na tela */
+    margin-top: 24px;
+}
+
+.content main .bottom-data h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.content main .bottom-data form {
+    width: 100%; /* Ocupa toda a largura disponível */
+    max-width: 400px; /* Define uma largura máxima para o formulário */
+}
+
+.content main .bottom-data .form-group {
+    margin-bottom: 20px; /* Espaçamento entre os campos */
+}
+
+.content main .bottom-data .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 16px;
+}
+
+.content main .bottom-data .form-group input[type="text"],
+.content main .bottom-data .form-group input[type="email"],
+.content main .bottom-data .form-group textarea {
+    width: 100%; /* Ocupa toda a largura disponível */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.content main .bottom-data .form-group textarea {
+    resize: vertical; /* Permite redimensionamento vertical */
+}
+
+.content main .bottom-data button[type="submit"] {
+    width: 100%; /* Ocupa toda a largura disponível */
+    padding: 12px;
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.content main .bottom-data button[type="submit"]:hover {
+    background-color: var(--light-primary); /* Cor de fundo mais clara ao passar o mouse */
+}
+
+.content nav .profile {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Espaçamento entre a imagem e as informações do usuário */
+}
+
+.content nav .profile img {
+    width: 36px;
+    height: 36px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.content nav .profile .user-info {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2; /* Ajusta o espaçamento entre o nome e a função */
+}
+
+.content nav .profile .user-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--dark);
+}
+
+.content nav .profile .user-role {
+    font-size: 12px;
+    color: var(--dark-grey);
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Espaçamento entre a imagem e as informações do usuário */
+}
+
+.profile img {
+    width: 36px;
+    height: 36px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.user-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--dark);
+}
+
+.user-role {
+    font-size: 12px;
+    color: var(--dark-grey);
+}
+

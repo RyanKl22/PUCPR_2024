@@ -1,10 +1,9 @@
-
 const toggleButton = document.getElementById('nav-toggle');
 const navLinks = document.getElementById('nav-links');
 
 toggleButton.addEventListener('click', () => {
     navLinks.classList.toggle('active');
-})
+});
 
 function toggleAccountFields() {
     const accountType = document.getElementById('accountType').value;
@@ -157,21 +156,21 @@ function validarTelefone(telefoneId, errorMessageId) {
     }
 }
 
-
 function validarEmail() {
     const email = document.getElementById('email').value;
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     const errorMessage = document.getElementById('errorMessageEmail');
     
     if (!regex.test(email)) {
         errorMessage.innerText = 'Email inválido';
-        document.getElementById('email').value = "";
+        errorMessage.style.display = 'block'; // Exibe a mensagem de erro
+        document.getElementById('email').value = ""; // Limpa o campo de email
     } else {
-            document.getElementById('errorMessageEmail').innerText = "";
-        }
-
-    
+        errorMessage.innerText = ''; // Limpa a mensagem de erro
+        errorMessage.style.display = 'none'; // Oculta a mensagem de erro
+    }
 }
+
 
 function validarCNPJ() {
     // Obtém o valor do CNPJ do campo de entrada
@@ -211,8 +210,15 @@ function validarDataAbertura() {
         document.getElementById('errorMessageDataAbertura').innerText = 'A data de abertura não pode ser maior que a data atual';
         return false;
     } else {
-        // Se a data de abertura for válida, limpe a mensagem de erro (se houver) e retorne true
+        // Se a data de abertura for válida, limpe a mensagem de erro (se houver)
         document.getElementById('errorMessageDataAbertura').innerText = '';
         return true;
     }
+}
+
+// Função para exibir mensagens de erro de registro
+function exibirMensagemErroRegistro(mensagem) {
+    const errorMessageDiv = document.getElementById('errorMessageRegistro');
+    errorMessageDiv.innerText = mensagem;
+    errorMessageDiv.style.display = 'block';
 }
