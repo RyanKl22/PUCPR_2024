@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JourneyBuddy</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    
+    <nav>
+        <div class="container main-nav flex">
+            <a href="#" class="company-logo">
+                <img class="Logoo" src="./images/Logo - Copia.png" alt="company logo">
+            </a>
+            <div class="nav-links" id="nav-links">
+                <ul class="flex">
+                    <li><a href="nova_conta.html" class="hover-link primary-button">Criar nova Conta</a></li>
+                </ul>
+            </div>
+            <a href="#" class="nav-toggle hover-link" id="nav-toggle">
+                <i class="fa-solid fa-bars"></i>
+            </a>
+        </div>
+    </nav>
+
+    <header>
+        <div class="container header-section flex">
+            <div class="header-right">
+                <img src="images/Logo - Copia (2).png" alt="logo image">
+            </div>
+            <div class="header-left">
+                <div class="login-container">
+                    <!-- Início do formulário de login -->
+                    <form action="login.php" method="post">
+                        <h2>Login</h2>
+                        <div class="form-group">
+                            <label for="email">Email:</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Senha:</label>
+                            <input type="password" id="password" name="password" required>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="primary-button">Entrar</button>
+                        </div>
+                        <a href="forgot-password.html">Esqueceu a senha?</a>
+                    </form>
+                    <!-- Fim do formulário de login -->
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <br>
+    
+    <!-- Popup de erro -->
+    <div id="errorPopup" class="error-popup" style="display: none;">
+        <p id="errorMessage"></p>
+        <button onclick="closePopup()">Fechar</button>
+    </div>
+
+     <!-- Popup de sucesso -->
+    <div id="successPopup" class="popup" style="display: none;">
+        <p>Usuário criado com sucesso!</p>
+        <button onclick="closeSuccessPopup()">Fechar</button>
+    </div>
+
+    <footer>
+        <div class="subfooter">
+            <div class="container flex subfooter-container">
+                <a class="hover-link2" href="#">© 2024 JourneyBuddy. Todos os direitos reservados</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://kit.fontawesome.com/c1fc3d2826.js" crossorigin="anonymous"></script>
+
+    <script>
+        const toggleButton = document.getElementById('nav-toggle');
+        const navLinks = document.getElementById('nav-links');
+
+        toggleButton.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const erro = urlParams.get('erro');
+
+            if (erro) {
+                let mensagemErro = '';
+                switch (erro) {
+                    case 'senha_incorreta':
+                        mensagemErro = 'Senha ou Usuário incorreto. Tente novamente.';
+                        break;
+                    case 'usuario_nao_encontrado':
+                        mensagemErro = 'Senha ou Usuário incorreto. Tente novamente.';
+                        break;
+                    case 'dados_incompletos':
+                        mensagemErro = 'Por favor, forneça um e-mail e senha.';
+                        break;
+                    default:
+                        mensagemErro = 'Ocorreu um erro. Tente novamente.';
+                }
+                document.getElementById('errorMessage').textContent = mensagemErro;
+                document.getElementById('errorPopup').style.display = 'block';
+            }
+
+            // Opcional: remover o parâmetro de query da URL sem recarregar a página
+            if (history.pushState) {
+                let newurl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+                window.history.pushState({path:newurl}, '', newurl);
+            }
+        });
+
+        function closePopup() {
+            document.getElementById('errorPopup').style.display = 'none';
+        }
+
+        // Obtém o parâmetro 'success' da URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const successMessage = urlParams.get('success');
+
+        // Se houver um parâmetro 'success' com valor igual a '1', exibe o popup de sucesso
+        if (successMessage === '1') {
+            showSuccessPopup();
+        }
+
+        // Função para exibir o popup de sucesso
+        function showSuccessPopup() {
+            const popup = document.getElementById('successPopup');
+            popup.style.display = 'block';
+        }
+
+        // Função para fechar o popup de sucesso
+        function closeSuccessPopup() {
+            const popup = document.getElementById('successPopup');
+            popup.style.display = 'none';
+        }
+
+    </script>
+
+</body>
+</html>
