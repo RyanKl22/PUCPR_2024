@@ -646,6 +646,38 @@ body {
     .content main .bottom-data .reminders .task-list {
         min-width: 340px;
     }
+
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+    }
+
+    .sidebar .logo {
+        justify-content: center;
+    }
+
+    .content {
+        width: 100%;
+        left: 0;
+    }
+
+    .content nav {
+        flex-wrap: wrap;
+        padding: 0 16px;
+    }
+
+    .content nav form {
+        width: 100%;
+    }
+
+    .content nav form .form-input {
+        width: 100%;
+    }
+
+    .content main {
+        padding: 24px 16px;
+    }
 }
 
 .profile {
@@ -770,7 +802,7 @@ body {
     border: none; /* Sem borda */
     border-radius: 8px; /* Borda arredondada */
     font-size: 16px;
-    color: var(--light);
+    color: var (--light);
     background-color: var(--primary); /* Cor de fundo do botão */
     cursor: pointer;
     transition: background-color 0.3s ease;
@@ -856,4 +888,3 @@ label[for="file-upload"] {
     height: 100px; /* Define a altura fixa do textarea */
     box-sizing: border-box; /* Inclui padding e border no cálculo do width e height */
 }
-
