@@ -222,3 +222,14 @@ function exibirMensagemErroRegistro(mensagem) {
     errorMessageDiv.innerText = mensagem;
     errorMessageDiv.style.display = 'block';
 }
+
+// Função para verificar se há um parâmetro de erro de registro na URL e exibir a mensagem correspondente
+function verificarErroRegistro() {
+    const erroRegistro = new URLSearchParams(window.location.search).get('registro');
+    if (erroRegistro === 'erro_email') {
+        exibirMensagemErroRegistro('O email inserido já está em uso. Por favor, escolha outro email.');
+    }
+}
+
+// Chama a função para verificar erro de registro quando a página é carregada
+window.addEventListener('DOMContentLoaded', verificarErroRegistro);

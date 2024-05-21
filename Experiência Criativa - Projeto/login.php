@@ -1,14 +1,11 @@
 <?php
-session_start(); // Inicia a sessão, que é usada para salvar informações do usuário logado
+session_start();
+include 'db.php';
 
-include 'db.php'; // Inclui o script de conexão com o banco de dados
-
-// Verifica se o email e a senha foram enviados
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['email']) && isset($_POST['password'])) {
     $email = $_POST['email'];
     $senha = $_POST['password'];
 
-    // Prepara a consulta SQL para verificar se o usuário existe com o email fornecido
     $stmt = $conn->prepare("SELECT * FROM usuario WHERE Email = ?");
     $stmt->bind_param("s", $email);
     $stmt->execute();
@@ -16,33 +13,55 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['email']) && isset($_PO
 
     if ($resultado->num_rows > 0) {
         $usuario = $resultado->fetch_assoc();
-
-        // Verifica a senha
+        
         if (password_verify($senha, $usuario['Senha'])) {
-            // Senha está correta, salva as informações necessárias na sessão
+            $_SESSION['usuario_id'] = $usuario['ID'];
             $_SESSION['usuario_email'] = $usuario['Email'];
             
-            // Redireciona para a página desejada após o login
-            header("Location: main.html");
+            // Recupera informações adicionais do usuário, incluindo PJ_PF e Id_geral
+            $stmt_funcao = $conn->prepare("SELECT Primeiro_Nome, ADM, PJ_PF, Id_geral FROM funcao_user WHERE ID = ?");
+            $stmt_funcao->bind_param("i", $usuario['ID']);
+            $stmt_funcao->execute();
+            $resultado_funcao = $stmt_funcao->get_result();
+            
+            if ($resultado_funcao->num_rows > 0) {
+                $funcao_usuario = $resultado_funcao->fetch_assoc();
+
+                if (isset($funcao_usuario['Primeiro_Nome'])) {
+                    $_SESSION['usuario_nome'] = $funcao_usuario['Primeiro_Nome'];
+                } else {
+                    $_SESSION['usuario_nome'] = 'Valor Padrão';
+                }
+                
+                if (isset($funcao_usuario['ADM'])) {
+                    $_SESSION['usuario_adm'] = $funcao_usuario['ADM'];
+                }
+
+                if (isset($funcao_usuario['PJ_PF'])) {
+                    $_SESSION['usuario_pj_pf'] = $funcao_usuario['PJ_PF'];
+                }
+
+                if (isset($funcao_usuario['Id_geral'])) {
+                    $_SESSION['usuario_id_geral'] = $funcao_usuario['Id_geral'];
+                }
+            }
+
+            header("Location: main.php");
             exit();
         } else {
-            // Senha incorreta
-            header("Location: index.html?erro=senha_incorreta"); // Use o nome do seu arquivo de entrada se não for index.html
+            header("Location: index.html?erro=senha_incorreta");
             exit();
         }
     } else {
-        // Usuário não encontrado
-        header("Location: index.html?erro=usuario_nao_encontrado"); // Use o nome do seu arquivo de entrada se não for index.html
+        header("Location: index.html?erro=usuario_nao_encontrado");
         exit();
     }
 
     $stmt->close();
 } else {
-    // Não foi postado um email ou senha
-    header("Location: index.html?erro=dados_incompletos"); // Use o nome do seu arquivo de entrada se não for index.html
+    header("Location: index.html?erro=dados_incompletos");
     exit();
 }
 
 $conn->close();
 ?>
-
