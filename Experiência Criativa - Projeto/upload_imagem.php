@@ -15,6 +15,7 @@ if ($conn->connect_error) {
 
 $response = ['success' => false, 'filepaths' => []];
 
+
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES['imagens'])) {
 
     $target_dir = "uploads/";
