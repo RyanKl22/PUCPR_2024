@@ -18,6 +18,7 @@ function toggleAccountFields() {
     passwordFields.style.display = isAccountTypeSelected ? 'block' : 'none';
 }
 
+
 function validarIdade() {
     const dataNascimento = document.getElementById('dataNascimento').value;
     if (dataNascimento) {
