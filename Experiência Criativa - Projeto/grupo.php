@@ -99,7 +99,7 @@ if (!isset($_SESSION['usuario_adm'])) {
         <div class="popup-content">
             <h2>Escolha uma opção</h2>
             <button class="group-btn" id="meus-grupos-btn">Meus Grupos</button>
-            <button class="group-btn" id="grupos-participantes-btn">Criar novo grupo</button>
+            <button class="group-btn" id="grupos-participantes-btn">Criar grupo</button>
             <button class="close-btn" id="close-popup-btn">Fechar</button>
         </div>
     </div>
