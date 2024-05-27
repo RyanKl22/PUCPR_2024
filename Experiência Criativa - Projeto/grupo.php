@@ -95,7 +95,6 @@ if (!isset($_SESSION['usuario_adm'])) {
     </div>
 
     <!-- Popup -->
-    <!-- Realizar testes de criação de grupos -->
     <div id="popup" class="popup">
         <div class="popup-content">
             <h2>Escolha uma opção</h2>
