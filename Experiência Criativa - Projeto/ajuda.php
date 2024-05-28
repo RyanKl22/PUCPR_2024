@@ -33,7 +33,8 @@ if (!isset($_SESSION['usuario_adm'])) {
         <ul class="side-menu">
             <li><a href="main.php"><i class='bx bxs-home-smile'></i></i>Home</a></li>
             <li><a href="grupo.php"><i class='bx bxs-group'></i></i>Grupos</a></li>
-            <li><a href="roteiro.php"><i class='bx bx-images'></i></i>Roteiros</a></li> 
+            <li><a href="roteiro.php"><i class='bx bx-images'></i></i>Criar Roteiro</a></li>
+            <li><a href="My_roteiro.php"><i class='bx bx-map-alt'></i>Meus Roteiros</a></li> 
         </ul>
         <ul class="side-menu">
             <li>
@@ -58,7 +59,7 @@ if (!isset($_SESSION['usuario_adm'])) {
             </form>
             <input type="checkbox" id="theme-toggle" hidden>
             <a href="profile.php"class="profile">
-                <img src="images/Logo.png">
+                <img src="Imagens/Logo.png">
             </a>
             <div class="user-info">
                 <span class="user-name"><?php echo $_SESSION['usuario_nome']; ?></span>

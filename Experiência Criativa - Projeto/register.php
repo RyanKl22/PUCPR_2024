@@ -1,4 +1,5 @@
 <?php
+
 include 'db.php'; // Inclui o script de conexão
 
 // Verifica se o formulário foi submetido
@@ -27,12 +28,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $stmtPf->close();
 
+        // Concatena primeiroNome e segundoNome
+        $nomeCompleto = $primeiroNome . ' ' . $segundoNome;
+
         // Preenche a nova tabela com os dados inseridos
         $stmtPreencherTabela = $conn->prepare("INSERT INTO funcao_user (email, Primeiro_nome, ADM, Anunciante, PJ_PF, id_geral) VALUES (?, ?, ?, ?, ?, ?)");
         $PJ_PF = false; // Define PJ_PF como false para Pessoa Física
         $ADM = 0;
         $Anunciante = 0;
-        $stmtPreencherTabela->bind_param("ssiiii", $email, $primeiroNome, $ADM, $Anunciante, $PJ_PF, $usuario_id);
+        $stmtPreencherTabela->bind_param("ssiiii", $email, $nomeCompleto, $ADM, $Anunciante, $PJ_PF, $usuario_id);
         $stmtPreencherTabela->execute();
         $stmtPreencherTabela->close();
     }

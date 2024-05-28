@@ -18,7 +18,6 @@ function toggleAccountFields() {
     passwordFields.style.display = isAccountTypeSelected ? 'block' : 'none';
 }
 
-
 function validarIdade() {
     const dataNascimento = document.getElementById('dataNascimento').value;
     if (dataNascimento) {
@@ -95,6 +94,7 @@ function validarCPF() {
 function validarSenha() {
     const senha = document.getElementById('password').value;
     const confirmarSenha = document.getElementById('confirmPassword').value;
+    const accountType = document.getElementById('accountType').value;
 
     // Verifica se as senhas correspondem
     if (senha !== confirmarSenha) {
@@ -114,6 +114,28 @@ function validarSenha() {
     if (!/[A-Z]/.test(senha)) {
         document.getElementById('confirmPasswordError').innerText = "A senha deve conter pelo menos uma letra maiúscula.";
         return false;
+    }
+
+    // Define os campos obrigatórios com base no tipo de conta selecionado
+    let requiredFields;
+    if (accountType === 'Pessoa Fisica') {
+        requiredFields = ['email', 'firstName', 'lastName', 'dataNascimento', 'cpf', 'gender', 'mobilePhone'];
+    } else if (accountType === 'Pessoa Juridica') {
+        requiredFields = ['email', 'tradeName', 'corporateName', 'cnpj', 'openDate', 'stateRegistration', 'contactPhone'];
+    } else {
+        // Se nenhum tipo de conta for selecionado, todos os campos são obrigatórios
+        alert('Por favor, selecione o tipo de conta.');
+        return false;
+    }
+
+    // Verifica se todos os campos obrigatórios estão preenchidos
+    for (let i = 0; i < requiredFields.length; i++) {
+        const field = document.getElementById(requiredFields[i]);
+        if (!field.value) {
+            alert('Por favor, preencha todos os campos obrigatórios.');
+            field.focus();
+            return false;
+        }
     }
 
     // Senha válida
@@ -158,20 +180,39 @@ function validarTelefone(telefoneId, errorMessageId) {
 }
 
 function validarEmail() {
-    const email = document.getElementById('email').value;
-    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    const errorMessage = document.getElementById('errorMessageEmail');
-    
-    if (!regex.test(email)) {
-        errorMessage.innerText = 'Email inválido';
-        errorMessage.style.display = 'block'; // Exibe a mensagem de erro
-        document.getElementById('email').value = ""; // Limpa o campo de email
+    console.log("Validando email...");
+
+    var emailInput = document.getElementById('email');
+    var errorMessageDiv = document.getElementById('mensagemErroEmail');
+    var email = emailInput.value;
+
+    // Verifica se o email está vazio
+    if (email === '') {
+        errorMessageDiv.textContent = 'O campo de email não pode estar vazio.';
+        emailInput.focus();
+        return false;
     } else {
-        errorMessage.innerText = ''; // Limpa a mensagem de erro
-        errorMessage.style.display = 'none'; // Oculta a mensagem de erro
+        // Limpa a mensagem de erro se o email for válido
+        errorMessageDiv.textContent = '';
+        
+        // Envia uma requisição AJAX para verificar se o email já existe
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "check_email.php", true); // Alterado para "register.php" que é o arquivo PHP responsável pela verificação do email
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                var response = JSON.parse(xhr.responseText);
+                if (response.exists) {
+                    errorMessageDiv.textContent = 'Este email já está cadastrado.';
+                    emailInput.focus();
+                }
+            }
+        };
+        xhr.send("email=" + email);
+
+        return true;
     }
 }
-
 
 function validarCNPJ() {
     // Obtém o valor do CNPJ do campo de entrada

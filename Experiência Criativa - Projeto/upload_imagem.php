@@ -10,11 +10,10 @@ $dbname = "JBB";
 $conn = new mysqli($servername, $username, $password, $dbname);
 
 if ($conn->connect_error) {
-  die("Conexão falhou: " . $conn->connect_error);
+    die("Conexão falhou: " . $conn->connect_error);
 }
 
 $response = ['success' => false, 'filepaths' => []];
-
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES['imagens'])) {
 
@@ -36,7 +35,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES['imagens'])) {
         }
     }
 
-    $response['success'] = true;
+    if (count($response['filepaths']) > 0) {
+        $response['success'] = true;
+    }
 }
 
 echo json_encode($response);

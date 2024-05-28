@@ -622,9 +622,61 @@ body{
 
 }
 
-.imagem{
-    position: relative;
-    width: 30%;
+.content main .bottom-data {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Alinha o formulário ao centro na tela */
+    margin-top: 24px;
+}
+
+.content main .bottom-data h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.content main .bottom-data form {
+    width: 100%; /* Ocupa toda a largura disponível */
+    max-width: 400px; /* Define uma largura máxima para o formulário */
+}
+
+.content main .bottom-data .form-group {
+    margin-bottom: 20px; /* Espaçamento entre os campos */
+}
+
+.content main .bottom-data .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 16px;
+}
+
+.content main .bottom-data .form-group input[type="text"],
+.content main .bottom-data .form-group input[type="email"],
+.content main .bottom-data .form-group textarea {
+    width: 100%; /* Ocupa toda a largura disponível */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.content main .bottom-data .form-group textarea {
+    resize: vertical; /* Permite redimensionamento vertical */
+}
+
+.content main .bottom-data button[type="button"] {
+    width: 100%; /* Ocupa toda a largura disponível */
+    padding: 12px;
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.content main .bottom-data button[type="button"]:hover {
+    background-color: var(--light-primary); /* Cor de fundo mais clara ao passar o mouse */
 }
 
 .content nav .profile {
@@ -686,104 +738,46 @@ body{
     color: var(--dark-grey);
 }
 
-/* Popup */
-.popup {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    justify-content: center;
-    align-items: center;
-}
-
-.popup-content {
-    background: var(--light);
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-    width: 300px;
-}
-
-.popup-content h2 {
-    margin-bottom: 20px;
+.content main .bottom-data h2 {
     font-size: 24px;
+    margin-bottom: 20px;
+    color: var(--dark); /* Adicionado para garantir a cor do título */
 }
 
-.group-btn {
-    background-color: #3498db;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    font-size: 16px;
-    border-radius: 5px;
-    cursor: pointer;
-    margin: 10px;
-    transition: background-color 0.3s ease;
-}
-
-.group-btn:hover {
-    background-color: #2980b9;
-}
-
-.close-btn {
-    background-color: red;
-    color: var(--light);
-    border: none;
-    padding: 10px 20px;
-    font-size: 16px;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 20px;
-    transition: background-color 0.3s ease;
-}
-
-.close-btn:hover {
-    background-color: var(--dark);
-}
-
-.hidden {
-    display: none;
-}
-
-/* Meus Grupos Content */
-#meus-grupos-content {
-    display: none;
-    background: var(--light);
-    padding: 20px;
-    border-radius: 10px;
-    margin-top: 20px;
-}
-
-#meus-grupos-content label {
-    display: block;
-    margin-top: 10px;
-    font-weight: bold;
-}
-
-#meus-grupos-content input {
+.content main .bottom-data form {
     width: 100%;
-    padding: 8px;
-    margin-top: 5px;
-    border: 1px solid var(--grey);
-    border-radius: 5px;
-    background: #f1f1f1;
+    max-width: 400px;
+    margin: 0 auto; /* Centraliza o formulário na tela */
 }
 
-#convidar-membro-btn {
-    background-color: #3498db;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
+.content main .bottom-data .form-group label {
+    display: block;
+    margin-bottom: 5px;
     font-size: 16px;
+    color: var(--dark); /* Adicionado para garantir a cor dos rótulos */
+}
+
+.content main .bottom-data .form-group input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.content main .bottom-data button[type="button"] {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--primary);
+    color: white;
+    border: none;
     border-radius: 5px;
     cursor: pointer;
-    margin-top: 20px;
+    font-size: 16px;
     transition: background-color 0.3s ease;
 }
 
-#convidar-membro-btn:hover {
-    background-color: #2980b9;
+.content main .bottom-data button[type="button"]:hover {
+    background-color: var(--light-primary);
 }
+

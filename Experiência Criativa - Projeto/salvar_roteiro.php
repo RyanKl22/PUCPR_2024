@@ -10,7 +10,7 @@ $dbname = "JBB";
 $conn = new mysqli($servername, $username, $password, $dbname);
 
 if ($conn->connect_error) {
-  die("Conexão falhou: " . $conn->connect_error);
+    die("Conexão falhou: " . $conn->connect_error);
 }
 
 $response = ['success' => false];
@@ -27,12 +27,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $id_usuario = $_SESSION['usuario_id'];
 
+    // Inserindo dados na tabela roteirosviagem
     $sql_roteiro = "INSERT INTO roteirosviagem (id_usuario, titulo, descricao, publico_privado) 
                     VALUES ('$id_usuario', '$titulo', '$descricao', '$privacidade')";
     mysqli_query($conn, $sql_roteiro);
 
     $id_roteiro = mysqli_insert_id($conn);
 
+    // Inserindo dados na tabela localizacoesvalores
     for ($i = 0; $i < count($localizacoes); $i++) {
         $localizacao = $localizacoes[$i];
         $valor = $valores[$i];
@@ -44,6 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         mysqli_query($conn, $sql_localizacao);
     }
 
+    // Inserindo dados na tabela imagens
     if (!empty($imagens['name'][0])) {
         $target_dir = "uploads/";
 
@@ -64,6 +67,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         }
     }
+
+    // Inserindo dados na tabela gruposviagem
+    $sql_grupo = "INSERT INTO gruposviagem (id_roteiro, id_admin, nome, descricao) 
+                  VALUES ('$id_roteiro', '$id_usuario', '$titulo', '')";
+    mysqli_query($conn, $sql_grupo);
+
+    $id_grupo = mysqli_insert_id($conn);
+
+    // Inserindo dados na tabela membrosgrupo
+    $sql_membro = "INSERT INTO membrosgrupo (id_grupo, id_usuario) 
+                   VALUES ('$id_grupo', '$id_usuario')";
+    mysqli_query($conn, $sql_membro);
 
     $response['success'] = true;
 }

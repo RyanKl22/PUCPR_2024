@@ -25,13 +25,19 @@ if ($conn->connect_error) {
     die("Conexão falhou: " . $conn->connect_error);
 }
 
-// Query para obter os roteiros de viagem ordenados por ID em ordem decrescente
-$sql = "SELECT rv.id, rv.titulo, rv.descricao, img.imagem, rv.id_usuario, GROUP_CONCAT(lv.nome_local SEPARATOR ';') AS nome_local, 
-        GROUP_CONCAT(lv.valor_gasto ORDER BY lv.id SEPARATOR ';') AS valor_gasto, lv.moeda, fu.Primeiro_nome 
+// Query para obter os roteiros de viagem do usuário logado, ordenados por ID em ordem decrescente
+$sql = "SELECT rv.id, rv.titulo, rv.descricao, img.imagem, rv.id_usuario, 
+        GROUP_CONCAT(lv.id ORDER BY lv.id SEPARATOR ';') AS local_ids,
+        GROUP_CONCAT(lv.nome_local ORDER BY lv.id SEPARATOR ';') AS nome_local, 
+        GROUP_CONCAT(lv.valor_gasto ORDER BY lv.id SEPARATOR ';') AS valor_gasto, 
+        GROUP_CONCAT(lv.latitude ORDER BY lv.id SEPARATOR ';') AS latitude, 
+        GROUP_CONCAT(lv.longitude ORDER BY lv.id SEPARATOR ';') AS longitude,
+        lv.moeda, fu.Primeiro_nome 
         FROM roteirosViagem rv 
         LEFT JOIN Imagens img ON rv.id = img.id_roteiro
         LEFT JOIN localizacoesvalores lv ON rv.id = lv.id_roteiro
         LEFT JOIN funcao_user fu ON rv.id_usuario = fu.ID
+        WHERE rv.id_usuario = $logged_in_user_id
         GROUP BY rv.id
         ORDER BY rv.id DESC";
 
@@ -79,12 +85,18 @@ $result = $conn->query($sql);
             border-radius: 5px;
             border: 1px solid #ccc;
         }
+        .post form input[type='text'].editing,
+        .post form textarea.editing {
+            background-color: #e6f7ff;
+            border-color: #80bdff;
+        }
         .post form textarea {
-            resize: none; /* Impede que o textarea seja redimensionável */
-            height: 100px; /* Define uma altura fixa para o textarea */
+            resize: none;
+            height: 100px;
         }
         .post form .image-upload {
             margin-bottom: 10px;
+            position: relative;
         }
         .post form .image-upload img {
             max-width: 100%;
@@ -119,8 +131,7 @@ $result = $conn->query($sql);
             box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
             z-index: 1;
             border-radius: 5px;
-            right: 0; /* Alinha o dropdown para a esquerda */
-            transform: translateX(-50%);
+            right: 0;
         }
         .dropdown-content a {
             color: black;
@@ -136,87 +147,36 @@ $result = $conn->query($sql);
         .dropdown:hover .dropbtn {
             background-color: #2980b9;
         }
-        .like-button, .dislike-button, .comment-button {
-            margin-right: 10px;
-        }
-        body {
-            transition: background-color 0.5s, color 0.5s;
-        }
-
-        body.light-theme {
-            background-color: #ffffff;
-            color: #000000;
-        }
-
-        body.dark-theme {
-            background-color: #000000;
-            color: #ffffff;
-        }
-        .post-actions {
-            display: flex;
-            justify-content: flex-start;
-            margin-top: 10px;
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border: none;
-            background-color: transparent;
-            cursor: pointer;
+        .edit-btn,
+        .confirm-btn {
+            position: absolute;
+            top: 10px;
+            right: 100px;
+            background-color: #f39c12;
+            color: white;
             padding: 10px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
             margin-right: 10px;
-            transition: color 0.3s;
         }
-
-        .btn-icone {
-            margin-right: 5px;
-        }
-
-        .btn-curtir .btn--icone-curtir,
-        .btn-curtir .btn--icone-curtido,
-        .btn-descurtir .btn--icone-descurtir,
-        .btn-descurtir .btn--icone-descurtido,
-        .btn-comentar .btn--icone-comentar {
-            color: #666;
-        }
-
-        .btn-curtir:hover .btn--icone-curtir,
-        .btn-curtir:hover .btn--icone-curtido,
-        .btn-descurtir:hover .btn--icone-descurtir,
-        .btn-descurtir:hover .btn--icone-descurtido,
-        .btn-comentar:hover .btn--icone-comentar {
-            color: #333;
-        }
-
-        .btn-curtir .btn-conteudo--curtir,
-        .btn-curtir .btn-conteudo--curtido,
-        .btn-descurtir .btn-conteudo--descurtir,
-        .btn-descurtir .btn-conteudo--descurtido,
-        .btn-comentar .btn-conteudo--comentar {
-            display: inline;
-        }
-
-        .btn-curtir .btn--icone-curtido,
-        .btn-curtir .btn-conteudo--curtido,
-        .btn-descurtir .btn--icone-descurtido,
-        .btn-descurtir .btn-conteudo--descurtido {
+        .confirm-btn {
+            background-color: #4CAF50;
             display: none;
         }
-
-        .btn-curtir.active .btn--icone-curtir,
-        .btn-curtir.active .btn-conteudo--curtir,
-        .btn-descurtir.active .btn--icone-descurtir,
-        .btn-descurtir.active .btn-conteudo--descurtir {
+        .remove-image-btn {
+            background-color: #ff6b6b;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 5px;
             display: none;
         }
-
-        .btn-curtir.active .btn--icone-curtido,
-        .btn-curtir.active .btn-conteudo--curtido,
-        .btn-descurtir.active .btn--icone-descurtido,
-        .btn-descurtir.active .btn-conteudo--descurtido {
-            display: inline;
+        .upload-image {
+            display: none;
         }
     </style>
     <title>JourneyBuddy</title>
@@ -224,13 +184,12 @@ $result = $conn->query($sql);
 
 <body>
 
-    <!-- Barra Lateral -->
     <div class="sidebar">
         <a href="#" class="logo"></a>
         <ul class="side-menu">
+            <li><a href="main.php"><i class='bx bxs-home-smile'></i></i>Home</a></li>
             <li><a href="grupo.php"><i class='bx bxs-group'></i>Grupos</a></li>
-            <li><a href="roteiro.php"><i class='bx bx-images'></i>Criar Roteiro</a></li>
-            <li><a href="My_roteiro.php"><i class='bx bx-map-alt'></i>Meus Roteiros</a></li>
+            <li><a href="roteiro.php"><i class='bx bx-images'></i>Roteiros</a></li>
             <li><a href="ajuda.php"><i class='bx bx-help-circle'></i>Ajuda</a></li>
         </ul>
         <ul class="side-menu">
@@ -242,11 +201,8 @@ $result = $conn->query($sql);
             </li>
         </ul>
     </div>
-    <!-- Fim da Barra Lateral -->
 
-    <!-- Conteúdo Principal -->
     <div class="content">
-        <!-- Barra de Navegação -->
         <nav>
             <form action="#">
                 <div class="form-input">
@@ -263,29 +219,25 @@ $result = $conn->query($sql);
                 <span class="user-role"><?php echo ($_SESSION['usuario_adm'] ? 'Administrador' : 'Viajante'); ?></span>
             </div>
         </nav>
-        <!-- Fim da Barra de Navegação -->
 
         <main>
             <div class="header">
                 <div class="left">
-                    <h1>JourneyBuddy</h1>
+                    <h1>Meus Roteiros</h1>
                 </div>
             </div>
 
             <div class="bottom-data">
-                <!-- Formulário de postagem -->
                 <div class="newPost">
                     <?php 
                     if ($result->num_rows > 0) {
                         while($row = $result->fetch_assoc()) {
                             echo "<div class='post' id='post-{$row['id']}'>";
+                            echo "<button class='edit-btn' data-id='{$row['id']}'>Alterar</button>";
+                            echo "<button class='confirm-btn' id='confirm-btn-{$row['id']}'>Confirmar Alterações</button>";
                             echo "<div class='dropdown'>";
                             echo "<button class='dropbtn'>Opções</button>";
                             echo "<div class='dropdown-content'>";
-                            if ($row['id_usuario'] != $logged_in_user_id) {
-                                echo "<a href='#' class='import-post' data-id='{$row['id']}'>Importar</a>";
-                            }
-                            echo "<a href='#'>Compartilhar</a>";
                             if ($row['id_usuario'] == $logged_in_user_id) {
                                 echo "<a href='#' class='delete-post' data-id='{$row['id']}'>Excluir</a>";
                             }
@@ -301,59 +253,37 @@ $result = $conn->query($sql);
                             echo "<h3>Título Roteiro</h3>";
                             echo "<input type='text' name='title' value='" . $row['titulo'] . "' placeholder='Título' readonly>";
                             echo "<h3>Descrição</h3>";
-                            echo "<textarea name='textarea' placeholder='Descrição' readonly>" . $row['descricao'] . "</textarea>";
+                            echo "<textarea name='textarea' placeholder='Vamos mudar o mundo?' id='textarea' readonly>" . $row['descricao'] . "</textarea>";
                             if (!empty($row['imagem'])) {
                                 echo "<h3>Imagem</h3>";
                                 echo "<div class='image-upload'>";
                                 echo "<img src='/Projeto/" . $row['imagem'] . "' alt='Imagem do Roteiro'>";
+                                echo "<button type='button' class='remove-image-btn'>Remover Imagem</button>";
+                                echo "<input type='file' name='image' class='upload-image' />";
+                                echo "</div>";
+                            } else {
+                                echo "<div class='image-upload'>";
+                                echo "<button type='button' class='remove-image-btn' style='display:none;'>Remover Imagem</button>";
+                                echo "<input type='file' name='image' class='upload-image' style='display:none;' />";
                                 echo "</div>";
                             }
                             echo "<h3>Valores Gastos</h3>";
                             echo "<div class='location-value'>";
-                            // Separando as localizações e valores em um array
                             $locais = explode(';', $row['nome_local']);
                             $valores = explode(';', $row['valor_gasto']);
                             
-                            // Verificando se o número de localizações e valores corresponde
                             if (count($locais) == count($valores)) {
-                                // Iterando sobre os locais e valores para exibir em pares
-                                for ($i = 0; $i < count($locais); $i++) {  // Adicionei a declaração correta da variável $i
-                                    echo "<input type='text' name='location' value='" . trim($locais[$i]) . "' placeholder='Descrição' readonly>";
-                                    echo "<input type='text' name='value' value='" . trim($valores[$i]) . " " . $row['moeda'] . "' placeholder='Valor' readonly>";
+                                for ($i = 0; $i < count($locais); $i++) {
+                                    echo "<input type='text' name='location[]' value='" . trim($locais[$i]) . "' placeholder='Localização' readonly>";
+                                    echo "<input type='text' name='value[]' value='" . trim($valores[$i]) . "' placeholder='Valor' readonly>";
+                                    echo "<input type='hidden' name='latitude[]' value=''>";
+                                    echo "<input type='hidden' name='longitude[]' value=''>";
                                 }
                             } else {
                                 echo "<p style='color: red;'>Erro: número de localizações e valores não corresponde.</p>";
                             }
                             echo "</div>";
                             echo "</form>";
-                            echo "<div class='post-actions'>";
-                            echo "<button class='btn btn-curtir'>
-                                    <span class='btn-icone btn--icone-curtir'>
-                                        <span class='fa fa-heart'></span>
-                                    </span>
-                                    <span class='btn-icone btn--icone-curtido'>
-                                        <span class='fa fa-heart'></span>
-                                    </span>
-                                    <span class='btn-conteudo btn-conteudo--curtido'>Curtido</span>
-                                    <span class='btn-conteudo btn-conteudo--curtir'>Curtir</span>
-                                </button>";
-                            echo "<button class='btn btn-descurtir'>
-                                    <span class='btn-icone btn--icone-descurtir'>
-                                        <span class='fa fa-thumbs-down'></span>
-                                    </span>
-                                    <span class='btn-icone btn--icone-descurtido'>
-                                        <span class='fa fa-thumbs-down'></span>
-                                    </span>
-                                    <span class='btn-conteudo btn-conteudo--descurtido'>Descurtido</span>
-                                    <span class='btn-conteudo btn-conteudo--descurtir'>Descurtir</span>
-                                </button>";
-                            echo "<button class='btn btn-comentar'>
-                                    <span class='btn-icone btn--icone-comentar'>
-                                        <span class='fa fa-comment'></span>
-                                    </span>
-                                    <span class='btn-conteudo btn-conteudo--comentar'>Comentar</span>
-                                </button>";
-                            echo "</div>";
                             echo "</div>";
                         }
                     } else {
@@ -372,7 +302,7 @@ $result = $conn->query($sql);
             document.querySelectorAll('.delete-post').forEach(button => {
                 button.addEventListener('click', function(e) {
                     e.preventDefault();
-                    console.log('Delete button clicked');  // Adiciona o console.log aqui
+                    console.log('Botão de Deleter Clicado');
                     const postId = this.getAttribute('data-id');
                     if (confirm('Tem certeza que deseja excluir este roteiro?')) {
                         fetch('delete_post.php', {
@@ -398,35 +328,135 @@ $result = $conn->query($sql);
                 });
             });
 
-            document.querySelectorAll('.import-post').forEach(button => {
+            document.querySelectorAll('.edit-btn').forEach(button => {
                 button.addEventListener('click', function(e) {
                     e.preventDefault();
-                    console.log('Import button clicked');  // Adiciona o console.log aqui
+                    console.log('Edit button clicked');
                     const postId = this.getAttribute('data-id');
-                    if (confirm('Tem certeza que deseja importar este roteiro?')) {
-                        fetch('import_post.php', {
+                    const postElement = document.getElementById('post-' + postId);
+                    const inputs = postElement.querySelectorAll('input, textarea');
+                    const confirmButton = document.getElementById('confirm-btn-' + postId);
+                    const removeImageButton = postElement.querySelector('.remove-image-btn');
+                    const uploadImageInput = postElement.querySelector('.upload-image');
+
+                    inputs.forEach(input => {
+                        input.removeAttribute('readonly');
+                        input.classList.add('editing');
+                    });
+
+                    confirmButton.style.display = 'inline-block';
+                    if (removeImageButton) removeImageButton.style.display = 'inline-block';
+
+                    removeImageButton.addEventListener('click', function() {
+                        const imageElement = postElement.querySelector('.image-upload img');
+                        imageElement.style.display = 'none';
+                        uploadImageInput.style.display = 'inline-block';
+                        removeImageButton.style.display = 'none';
+                    });
+
+                    uploadImageInput.addEventListener('change', function(event) {
+                        const file = event.target.files[0];
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            const imageElement = postElement.querySelector('.image-upload img');
+                            imageElement.src = e.target.result;
+                            imageElement.style.display = 'block';
+                            removeImageButton.style.display = 'inline-block';
+                            uploadImageInput.style.display = 'none';
+                        }
+                        reader.readAsDataURL(file);
+                    });
+
+                    confirmButton.addEventListener('click', function() {
+                        const updatedData = {
+                            location_ids: [],
+                            location: [],
+                            value: [],
+                            latitude: [],
+                            longitude: []
+                        };
+                        inputs.forEach(input => {
+                            if (input.name === 'location[]') {
+                                updatedData.location.push(input.value);
+                                updatedData.location_ids.push(input.dataset.id);
+                            } else if (input.name === 'value[]') {
+                                updatedData.value.push(input.value);
+                            } else if (input.name === 'latitude[]') {
+                                updatedData.latitude.push(input.value);
+                            } else if (input.name === 'longitude[]') {
+                                updatedData.longitude.push(input.value);
+                            } else {
+                                updatedData[input.name] = input.value;
+                            }
+                            input.setAttribute('readonly', true);
+                            input.classList.remove('editing');
+                        });
+
+                        fetch('update_post.php', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
                             },
-                            body: JSON.stringify({ id: postId }),
+                            body: JSON.stringify({ id: postId, data: updatedData }),
                         })
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
-                                alert('Roteiro importado com sucesso!');
+                                alert('Roteiro atualizado com sucesso!');
                             } else {
-                                alert('Erro ao importar o roteiro: ' + data.message);
+                                alert('Erro ao atualizar o roteiro.');
                             }
+                            confirmButton.style.display = 'none';
+                            if (removeImageButton) removeImageButton.style.display = 'none';
+                            if (uploadImageInput) uploadImageInput.style.display = 'none';
                         })
                         .catch((error) => {
                             console.error('Erro:', error);
+                            confirmButton.style.display = 'none';
+                            if (removeImageButton) removeImageButton.style.display = 'none';
+                            if (uploadImageInput) uploadImageInput.style.display = 'none';
                         });
-                    }
+                    });
+
+                    initAutocomplete();
                 });
             });
+
+            function initAutocomplete() {
+                const localizacaoInputs = document.querySelectorAll('input[name="location[]"]');
+                const brasilBounds = new google.maps.LatLngBounds(
+                    new google.maps.LatLng(-33.8688, -74.2149),
+                    new google.maps.LatLng(5.2718, -32.3987)
+                );
+
+                const europeBounds = new google.maps.LatLngBounds(
+                    new google.maps.LatLng(35.0, -10.0),
+                    new google.maps.LatLng(71.0, 40.0)
+                );
+
+                localizacaoInputs.forEach(input => {
+                    const autocomplete = new google.maps.places.Autocomplete(input, {
+                        bounds: brasilBounds.union(europeBounds),
+                        componentRestrictions: { country: ['BR', 'DE', 'FR', 'ES', 'IT', 'GB', 'PT', 'NL', 'BE', 'CH', 'AT'] },
+                        types: ['geocode']
+                    });
+
+                    autocomplete.addListener('place_changed', function() {
+                        const place = autocomplete.getPlace();
+                        const latitude = place.geometry.location.lat();
+                        const longitude = place.geometry.location.lng();
+
+                        const parentDiv = input.closest('.location-value');
+                        parentDiv.querySelector('.latitude').value = latitude;
+                        parentDiv.querySelector('.longitude').value = longitude;
+                    });
+                });
+            }
+
+            initAutocomplete();
         });
     </script>
-
+    <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAI0_JvMUWuxEczMwkclXtvlqXJ4wQMx7s&libraries=places&callback=initAutocomplete"></script>
 </body>
 </html>
+

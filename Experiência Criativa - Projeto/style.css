@@ -6,12 +6,11 @@
     box-sizing: border-box;
 }
 
-.Logoo{
+.Logoo {
     position: relative;
     width: 150px; 
     height: 200px;
 }
-
 
 :root {
     --primary-text-color: #183b56;
@@ -60,6 +59,8 @@ ul {
     margin-inline: auto;
     padding-inline: var(--padding-inline-section);
     overflow: hidden;
+    display: grid; /* Usando grid layout para responsividade */
+    grid-gap: 20px;
 }
 
 .flex {
@@ -208,7 +209,7 @@ header {
 }
 
 .form-group input {
-    width: 300px; /* Faz o input ocupar a largura total */
+    width: 100%; /* Faz o input ocupar a largura total */
     padding: 10px; /* Espaçamento interno para os inputs */
     border-radius: 4px; /* Bordas arredondadas para os inputs */
     border: 1px solid #ccc; /* Bordas sutis */
@@ -217,6 +218,17 @@ header {
 .primary-button {
     width: 100%; /* Ajuste para que o botão ocupe toda a largura do contêiner */
     cursor: pointer; /* Indica que o elemento é clicável */
+}
+
+/* Botão de mostrar senha */
+#show_password {
+    position: absolute;
+    bottom: 2px;
+    right: 10px;
+    border: none;
+    background-color: transparent;
+    font-size: 20px;
+    cursor: pointer;
 }
 
 /* Responsividade */
@@ -249,11 +261,16 @@ header {
     .header-section {
         flex-direction: column;
         align-items: center;
+        padding-top: 20px; /* Adiciona espaçamento superior em dispositivos móveis */
     }
 
     .header-left, .header-right {
         max-width: 100%;
         text-align: center;
+    }
+
+    .primary-button {
+        margin-top: 20px; /* Adiciona espaçamento acima do botão em dispositivos móveis */
     }
 }
 
@@ -310,7 +327,7 @@ header {
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     z-index: 9999;
     display: none; /* Inicialmente oculto */
-    text-align: center; /* Centraliza o conteúdo */
+    text-align: center;
 }
 
 #successPopup p {
@@ -332,5 +349,47 @@ header {
 }
 
 #successPopup button:hover {
+    background-color: #0056b3;
+}
+
+#global-login-form {
+    width: 100%;
+    max-width: 400px; /* Define uma largura máxima para o formulário */
+    margin: 0 auto;
+    padding: 20px;
+}
+
+#global-login-form #login-form ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+#global-login-form #login-form ul li {
+    position: relative;
+    margin-bottom: 1em;
+}
+
+#global-login-form #login-form ul li button#show_password {
+    position: absolute;
+    bottom: 2px;
+    right: 10px;
+    border: none;
+    background-color: transparent;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+#global-login-form #login-form ul li button[type=submit] {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+#global-login-form #login-form ul li button[type=submit]:hover {
     background-color: #0056b3;
 }

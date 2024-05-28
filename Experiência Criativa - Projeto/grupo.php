@@ -77,18 +77,19 @@ if (!isset($_SESSION['usuario_adm'])) {
 
             <div class="bottom-data">
                 <!-- Campos de Meus Grupos -->
-                <div id="criar-grupo-content" class="hidden">
-                    <h2>Criar Novo Grupo</h2>
-                    <form id="criar-grupo-form">
-                        <label for="novo-roteiro">Roteiro:</label>
-                        <input type="text" id="novo-roteiro" name="roteiro" required>
-                        <label for="novo-titulo-grupo">Título do Grupo:</label>
-                        <input type="text" id="novo-titulo-grupo" name="titulo_grupo" required>
-                        <label for="novo-descricao">Descrição:</label>
-                        <input type="text" id="novo-descricao" name="descricao" required>
-                        <button type="submit">Criar Grupo</button>
-                    </form>
+                <div id="meus-grupos-content" class="hidden">
+                    <h2>Meus Grupos</h2>
+                    <label for="roteiro">Roteiro:</label>
+                    <input type="text" id="roteiro" readonly>
+                    <label for="titulo-grupo">Título do Grupo:</label>
+                    <input type="text" id="titulo-grupo" readonly>
+                    <label for="descricao">Descrição:</label>
+                    <input type="text" id="descricao" readonly>
+                    <label for="membros">Membros / Função:</label>
+                    <input type="text" id="membros" readonly>
+                    <button id="convidar-membro-btn">Convidar Membro</button>
                 </div>
+            </div>
 
         </main>
 
@@ -98,84 +99,20 @@ if (!isset($_SESSION['usuario_adm'])) {
     <div id="popup" class="popup">
         <div class="popup-content">
             <h2>Escolha uma opção</h2>
-            <button class="group-btn" id="meus-grupos-btn">Meus Grupos</button>
-            <button class="group-btn" id="grupos-participantes-btn">Criar grupo</button>
-            <button class="close-btn" id="close-popup-btn">Fechar</button>
+            <button class="group-btn" id="meus-grupos-btn" onclick="window.location.href='my_grupos.php';">Meus Grupos</button>
+            <button class="group-btn" id="grupos-participantes-btn" onclick="window.location.href='grupos_participantes.php';">Grupos Participantes</button>
+            <button class="close-btn" id="close-popup-btn" onclick="closePopup();">Fechar</button>
         </div>
     </div>
 
     <script>
-        document.getElementById('meus-grupos-btn').addEventListener('click', function() {
-            fetch('fetch_grupos.php')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok ' + response.statusText);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.error) {
-                        alert(data.error);
-                    } else {
-                        document.getElementById('roteiro').value = data.roteiro;
-                        document.getElementById('titulo-grupo').value = data.titulo_grupo;
-                        document.getElementById('descricao').value = data.descricao;
-                        document.getElementById('membros').value = data.membros;
-                        document.getElementById('meus-grupos-content').classList.remove('hidden');
-                        document.getElementById('popup').style.display = 'none';
-                    }
-                })
-                .catch(error => {
-                    console.error('There was a problem with the fetch operation:', error);
-                    alert('Erro ao buscar dados: ' + error.message);
-                });
-        });
-
-        document.getElementById('close-popup-btn').addEventListener('click', function() {
+        function closePopup() {
             window.location.href = 'main.php';
-        });
+        }
 
         window.onload = function() {
             document.getElementById('popup').style.display = 'flex';
         };
-
-
-        //teste
-        document.getElementById('criar-grupo-form').addEventListener('submit', function(event) {
-        event.preventDefault();
-        
-        const formData = new FormData(this);
-        
-        fetch('create_grupo.php', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok ' + response.statusText);
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.error) {
-                alert(data.error);
-            } else {
-                alert(data.success);
-                document.getElementById('criar-grupo-content').classList.add('hidden');
-                document.getElementById('meus-grupos-content').classList.remove('hidden');
-                // Atualizar a lista de grupos se necessário
-            }
-        })
-        .catch(error => {
-            console.error('There was a problem with the fetch operation:', error);
-            alert('Erro ao criar grupo: ' + error.message);
-        });
-    });
-
-    document.getElementById('grupos-participantes-btn').addEventListener('click', function() {
-        document.getElementById('popup').style.display = 'none';
-        document.getElementById('criar-grupo-content').classList.remove('hidden');
-    });
     </script>
 
 </body>
